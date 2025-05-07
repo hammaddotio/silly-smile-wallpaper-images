@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "generateImageData": "node ./scripts/generate-image-data.js"
+    "generateImageData": "node ./scripts/generate-image-data.js",
+    "renameImages": "node ./scripts/rename-images.js"
   },
   "repository": {
     "type": "git",
@@ -17,5 +18,8 @@
   "bugs": {
     "url": "https://github.com/hammaddotio/silly-smile-wallpaper-images/issues"
   },
-  "homepage": "https://github.com/hammaddotio/silly-smile-wallpaper-images#readme"
+  "homepage": "https://github.com/hammaddotio/silly-smile-wallpaper-images#readme",
+  "dependencies": {
+    "uuid": "^11.1.0"
+  }
 }
