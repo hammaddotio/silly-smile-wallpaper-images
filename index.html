@@ -1,17 +1,74 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link href="/src/styles.css" rel="stylesheet">
-    <title>Vite + React</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wallpaper Gallery</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
 
-<body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
+<body class="bg-gray-100 p-8">
+    <div class="max-w-7xl mx-auto">
+        <h1 class="text-3xl font-bold mb-8 text-center">Wallpaper Collection</h1>
+        <div id="gallery" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+    </div>
+
+    <script>
+        // Fetch the generated JSON data
+        fetch('wallpapers.json')
+            .then(response => response.json())
+            .then(data => {
+                const gallery = document.getElementById('gallery');
+
+                data.forEach(image => {
+                    const card = document.createElement('div');
+                    card.className = 'bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow';
+
+                    card.innerHTML = `
+                        <img 
+                            src="${image.url}" 
+                            alt="${image.name}" 
+                            class="w-full h-48 object-cover cursor-pointer"
+                            loading="lazy"
+                            onclick="copyUrl('${image.url}')"
+                        >
+                        <div class="p-4">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="font-semibold">${image.name}</h3>
+                                <span class="text-sm bg-blue-100 text-blue-800 px-2 py-1 rounded">${image.topic}</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-gray-600 text-sm">ID: ${image.id}</span>
+                                <div class="flex items-center space-x-2">
+                                    <input 
+                                        type="text" 
+                                        value="${image.url}" 
+                                        class="text-xs p-1 border rounded w-32 truncate" 
+                                        id="url-${image.id}"
+                                        readonly
+                                    >
+                                    <button 
+                                        onclick="copyUrl('${image.url}')" 
+                                        class="text-blue-600 hover:text-blue-800 text-sm"
+                                    >
+                                        Copy
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                    gallery.appendChild(card);
+                });
+            });
+
+        function copyUrl(url) {
+            navigator.clipboard.writeText(url)
+                .then(() => alert('URL copied to clipboard!'))
+                .catch(err => console.error('Failed to copy URL:', err));
+        }
+    </script>
 </body>
 
 </html>
