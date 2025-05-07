@@ -4,5 +4,5 @@ import react from '@vitejs/plugin-react-swc'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: '/silly-smile-wallpaper-images/'
+  base: 'https://hammaddotio.github.io/silly-smile-wallpaper-images/'
 })
