@@ -2,15 +2,22 @@ const fs = require('fs');
 const path = require('path');
 
 const IMAGE_ROOT = path.join(__dirname, '../', 'dist', 'assets', 'images');
-const OUTPUT_FILE = path.join(__dirname, '../', 'data', 'wallpapers.json');
-const BASE_URL = '/assets/images/';
+const OUTPUT_DEV = path.join(__dirname, '../', 'wallpapers.dev.json');
+const OUTPUT_PROD = path.join(__dirname, '../', 'wallpapers.prod.json');
 
-function generateImageData() {
+// Configuration
+// const ENV = process.env.NODE_ENV || 'development';
+const BASE_URLS = {
+    development: '/dist/assets/images',
+    production: 'https://hammaddotio.github.io/silly-smile-wallpaper-images/dist/assets/images'
+};
+
+function generateImageData(outputPath, baseUrl) {
     const allTopics = fs.readdirSync(IMAGE_ROOT);
     let topics = [];
     let idCounter = 0;
 
-    // Separate "popular" topic and sort others alphabetically
+    // Topic sorting logic (keep popular first)
     if (allTopics.includes('Popular')) {
         topics.push('Popular');
         topics = topics.concat(
@@ -38,14 +45,14 @@ function generateImageData() {
                     name: formatName(name),
                     topic: formatName(topic),
                     author: 'Unknown',
-                    url: `${BASE_URL}${topic}/${imageFile}`
+                    url: `${baseUrl}/${topic}/${imageFile}`
                 });
             });
         }
     });
 
-    fs.writeFileSync(OUTPUT_FILE, JSON.stringify(result, null, 2));
-    console.log(`Generated ${result.length} entries with IDs from 0 to ${idCounter - 1}`);
+    fs.writeFileSync(outputPath, JSON.stringify(result, null, 2));
+    console.log(`Generated ${result.length} entries in ${path.basename(outputPath)}`);
 }
 
 function formatName(str) {
@@ -55,4 +62,6 @@ function formatName(str) {
         .join(' ');
 }
 
-generateImageData();
+// Generate both files
+generateImageData(OUTPUT_DEV, BASE_URLS.development);
+generateImageData(OUTPUT_PROD, BASE_URLS.production);
